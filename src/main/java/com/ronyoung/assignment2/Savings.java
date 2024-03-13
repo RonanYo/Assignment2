@@ -135,9 +135,6 @@ public class Savings {
         // Create deep copy of the savingsBean.
         AccountData monthlyReport = new AccountData(savingsBean);
         
-        
-                   
-        System.out.println(savingsBean.toString());
         // Calls the monthlyReset method.
         monthlyReset();
         
