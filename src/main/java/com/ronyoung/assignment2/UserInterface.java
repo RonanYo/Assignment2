@@ -1,8 +1,5 @@
 package com.ronyoung.assignment2;
 
-import com.ronyoung.assignment2.Chequing;
-import com.ronyoung.assignment2.Savings;
-import com.ronyoung.assignment2.AccountData;
 import java.math.BigDecimal;
 import java.util.Scanner;
 
@@ -11,11 +8,11 @@ public class UserInterface {
     
     private final Scanner sc;
     
-    private AccountData savingsBean;
-    private AccountData chequingBean; 
+    private final AccountData savingsBean;
+    private final AccountData chequingBean; 
     
-    private Chequing chequing;
-    private Savings savings;
+    private final Chequing chequing;
+    private final Savings savings;
     
     public UserInterface() {
         sc = new Scanner(System.in);
@@ -23,10 +20,24 @@ public class UserInterface {
         savingsBean = new AccountData();
         chequingBean = new AccountData();
         
-        chequing = new Chequing(new BigDecimal("100"), 
-                new BigDecimal("0.05"),chequingBean);
-        savings = new Savings(new BigDecimal("100"), 
-                new BigDecimal("0.05"), savingsBean);
+        // Get user input for starting values of Savings account.
+        System.out.println("Savings account starting balance: ");
+        BigDecimal startingBalanceSavings = sc.nextBigDecimal();
+        
+        System.out.println("Savings account annual interest rate: ");
+        BigDecimal annualInterestRateSavings = sc.nextBigDecimal();
+        
+        // Get user input for starting values of Savings account.
+        System.out.println("Savings account starting balance: ");
+        BigDecimal startingBalanceChequing = sc.nextBigDecimal();
+        
+        System.out.println("Savings account annual interest rate: ");
+        BigDecimal annualInterestRateChequing = sc.nextBigDecimal();
+
+        chequing = new Chequing(startingBalanceSavings, 
+                annualInterestRateSavings,chequingBean);
+        savings = new Savings(startingBalanceChequing, 
+                annualInterestRateChequing, savingsBean);
     }
     
     public void perform() {
@@ -39,35 +50,42 @@ public class UserInterface {
         */
         do {
             choice = bankMenu();
-            System.out.println("Choice = " + choice);
+            System.out.println("Choice = " + choice + "\n");
             switch (choice) {
                 
-                //If 'A' is selected, calls 
+                //If 'A' is selected brings up the Savings menu. 
                 case 'A' -> {
                     do {
                         choice = savingsMenu();
-                        System.out.println("Choice = " + choice);
+                        System.out.println("Choice = " + choice + "\n");
                         switch (choice) {
                             case 'A' -> {
                                 
-                                System.out.print("Deposit Amount: ");
+                                // Asks for a Deposit amount then calls the 
+                                //makeDeposit method with that amount.
+                                System.out.print("Deposit Amount: $");
                                 savings.makeDeposit(sc.nextBigDecimal());
                                                        
                             }
                         
                             case 'B' -> {
-                                System.out.print("Withdraw Amount: ");
+                                
+                                // Asks for a Deposit amount then calls the 
+                                //makeWithdrawal method with that amount.
+                                System.out.print("Withdraw Amount: $");
                                 savings.makeWithdraw(sc.nextBigDecimal());
                             }
                             
                             case 'C' -> {
                                 
-                                savings.doMonthlyReport();
+                                // Calls and prints the doMonthlyReport method.
+                                System.out.println(savings.doMonthlyReport());
                                 
                             }
                             
                             case 'D' -> {
                                 
+                                //Prints a returning to previous screen message.
                                 System.out.println("Returning to Bank Menu.");                                
                             }
                             
@@ -83,27 +101,34 @@ public class UserInterface {
                     
                     do {
                         choice = chequingMenu();
-                        System.out.println("Choice = " + choice);
+                        System.out.println("Choice = " + choice + "\n");
                         switch (choice) {
                             case 'A' -> {
                                 
+                                // Asks for a Deposit amount then calls the 
+                                //makeDeposit method with that amount.
                                 System.out.print("Deposit Amount: ");
                                 chequing.makeDeposit(sc.nextBigDecimal());
                         
                             }
                         
                             case 'B' -> {
+                                
+                                // Asks for a Deposit amount then calls the 
+                                //makeWithdrawal method with that amount.
                                 System.out.print("Withdraw Amount: ");
                                 chequing.makeWithdraw(sc.nextBigDecimal());
                             }
                             
                             case 'C' -> {
                                 
-                                System.out.println(chequing.doMonthlyReport().toString());
+                                // Calls and prints the doMonthlyReport method.
+                                System.out.println(chequing.doMonthlyReport());
                             }
                             
                             case 'D' -> {
                                 
+                                //Prints a returning to previous screen message.
                                 System.out.println("Returning to Bank Menu.");
                             }
                             

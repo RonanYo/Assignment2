@@ -1,102 +1,156 @@
 package com.ronyoung.assignment2;
 
-import com.ronyoung.assignment2.AccountData;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-import java.util.Scanner;
 
 public class Savings {
     
-    private AccountData savingsCopy;
+    
+   // private AccountData deepCopy;
     private final AccountData savingsBean;
     
+    // Method created to use the savingsBean as a child of the AccountData method.
     public Savings(BigDecimal balance, BigDecimal interestRate, AccountData savingsBean ) {
         
         this.savingsBean = savingsBean;
         
+        // Declaration of values within the savingsBean.
         savingsBean.setStartingBalance(balance);
         savingsBean.setCurrentBalance(balance);
         savingsBean.setAnnualInterestRate(interestRate);
     }
     
-
+    // Method to make take deposit amount and add it to the current balance of 
+    // the savingsBean. 
     public void makeDeposit(BigDecimal depositAmount) {
         
+        // Checks if the number of deposits is 0 then sets the current balance 
+        // to the starting balance if so.
         if (savingsBean.getNumberOfDeposits() == 0) {
             savingsBean.setCurrentBalance(savingsBean.getStartingBalance());
         }
+        
+        // Increases the number of deposits for the month.
         savingsBean.setNumberOfDeposits(savingsBean.getNumberOfDeposits() + 1);
         
+        // Increases the total amount deposited for the month.
         savingsBean.setTotalOfDeposits(savingsBean.getTotalOfDeposits().add(depositAmount));
         
+        // Adds the deposit amount to the current balance.
         savingsBean.setCurrentBalance(savingsBean.getCurrentBalance().add(depositAmount));
+        
+        //Prints out the new balance.
+        System.out.println("New balance is: $" + savingsBean.getCurrentBalance()
+         + "\n");
+
         
     }
     
+    // Method to take withdrawal amount and remove it from the current balance.
     public boolean makeWithdraw(BigDecimal withdrawAmount) {
         
+        // Checks if the withdrawal amount is greater than the current balance.
+        // Returns false if it is.
         if (withdrawAmount.compareTo(savingsBean.getCurrentBalance()) > 0) {
             
-            System.out.println("Insufficient funds. Current balance is " + savingsBean.getCurrentBalance() + ".");
+            System.out.println("Insufficient funds. Current balance is " + 
+                    savingsBean.getCurrentBalance() + ".\n");
             return false;
             
         }
+        
+        // Removes the withdrawal amount from the current balance of the 
+        //savingsBean.
         else {
             
+            // Increases the number of widrawals for the and increases the
+            // total amount withdrawn for the month.
             savingsBean.setNumberOfWithrawals(savingsBean.getNumberOfWithrawals()+ 1);
             savingsBean.setTotalOfWithdrawals(savingsBean.getTotalOfWithdrawals().add(withdrawAmount));
 
-            
-            if (savingsBean.getNumberOfWithrawals() > 4) {
-                
-                savingsBean.setCurrentBalance(savingsBean.getCurrentBalance().subtract(convertToBigDecimal(1)));
-                System.out.println("Max number of free withdrawals exceeded, a "
-                        + "$1 service fee has been added.");
+            // Checks if the number of with drawals equals 4. Prints a limit 
+            // reached message to warn the user.
+            if (savingsBean.getNumberOfWithrawals() == 4) {
+                System.out.println("""
+                                   Max number of free withdrawals reached. A $1 
+                                   service charge will be applied on all further
+                                   withdrawals this month.
+                                   """);
             }
             
+            // Checks if the number of withdrawals is greater than 4. 
+            // Subtracts $1 from the current balance as a service charge and 
+            // adds $1 to the monthly service charge. Then prints a message of 
+            // going over the withdrawal limit.
+            else if (savingsBean.getNumberOfWithrawals() > 4) {
+                
+                savingsBean.setCurrentBalance(savingsBean.getCurrentBalance().subtract(convertToBigDecimal(1)));
+                savingsBean.setMonthServiceCharge(savingsBean.getMonthServiceCharge().add(convertToBigDecimal(1)));
+                
+                System.out.println("""
+                                   Max number of free withdrawals exceeded, a $1
+                                   service fee has been applied.
+                                   """);
+            }
+            
+            // Updates current balance, subtracting the withdrawal amount. 
+            // Prints a success message and the new balance.
+            // Returns true that a withdrawal could be done.
             savingsBean.setCurrentBalance(savingsBean.getCurrentBalance().subtract(withdrawAmount));
             System.out.println("Withdrawal successful, new balance is: $" + 
-                    savingsBean.getCurrentBalance());
+                    savingsBean.getCurrentBalance() + "\n");
             
             return true;
         }
     }
     
+    // Method to calculate the interest earned from the balance this month.
     public void calculateInterest() {
         
+        //MathContext set up to have the variables only show two decimal points.
+        MathContext mc = new MathContext(2, RoundingMode.HALF_EVEN);
+
+        // New variable to hold the annual interest rate divided by 12 to get 
+        // the monthly one.
         BigDecimal monthlyInterestRate = 
-                savingsBean.getAnnualInterestRate().divide(convertToBigDecimal(12), MathContext.DECIMAL32);
+                savingsBean.getAnnualInterestRate().divide(convertToBigDecimal(12), mc);
         
-        savingsBean.setMonthInterestEarnings(monthlyInterestRate.multiply(savingsBean.getCurrentBalance()));
+        // Calculates and sets the interest earned this month.                
+        savingsBean.setMonthInterestEarnings(monthlyInterestRate.multiply(savingsBean.getCurrentBalance(), mc));
+        
+        // Adds the intertest earnings to the current balance.
         savingsBean.setCurrentBalance(savingsBean.getCurrentBalance().add(savingsBean.getMonthInterestEarnings()));
-        
+                
     }
     
+    // Method to create a monthly report, copy the current data of the month, 
+    // then reset all the data for a new month.
     public AccountData doMonthlyReport() {
         
-        
-        savingsBean.setCurrentBalance(savingsBean.getCurrentBalance().subtract(savingsBean.getMonthServiceCharge()));
-        
+        // Calls the calculateInterest method.        
         calculateInterest();
-             
-        savingsCopy = new AccountData();
-        this.savingsCopy = savingsBean;
         
-        System.out.println(savingsCopy.toString());
+        // Create deep copy of the savingsBean.
+        AccountData monthlyReport = new AccountData(savingsBean);
         
+        
+                   
+        System.out.println(savingsBean.toString());
+        // Calls the monthlyReset method.
         monthlyReset();
         
-        return savingsCopy;
+        // return copy of the savingsBean.
+        return monthlyReport;
         
     }
     
+    // Method to set all variables to zero other than startingBalance which is 
+    // set to the current balance.
     public void monthlyReset() {
         
-        BigDecimal newBalance = savingsBean.getCurrentBalance();
-        savingsBean.setStartingBalance(newBalance);
-        
+        savingsBean.setStartingBalance(savingsBean.getCurrentBalance());
         savingsBean.setMonthInterestEarnings(convertToBigDecimal(0));
         savingsBean.setCurrentBalance(convertToBigDecimal(0));
         savingsBean.setMonthServiceCharge(convertToBigDecimal(0));
@@ -106,6 +160,7 @@ public class Savings {
         savingsBean.setTotalOfWithdrawals(convertToBigDecimal(0));
     }
     
+    // Method that takes a float and returns it as a BigDecimal.
     public BigDecimal convertToBigDecimal(float number) {
         
         var newBigDecimal = new BigDecimal(number);
@@ -113,4 +168,5 @@ public class Savings {
         return newBigDecimal;
     }
     
+        
 }

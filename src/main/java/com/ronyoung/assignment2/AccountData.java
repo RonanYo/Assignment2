@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 public class AccountData {
 
+    // Variables that will be used throughout the program.
     private BigDecimal startingBalance = new BigDecimal(0);
     private BigDecimal currentBalance = new BigDecimal(0);
     private BigDecimal totalOfDeposits = new BigDecimal(0);
@@ -15,10 +16,11 @@ public class AccountData {
     private BigDecimal monthServiceCharge = new BigDecimal(0);
 
     
-    
+    // Method created for other methods to call.
     public AccountData() {
     }
 
+    // The constructor.
     public AccountData(BigDecimal startingBalance, BigDecimal currentBalance, BigDecimal totalOfDeposits, int numberOfDeposits, BigDecimal totalOfWithdrawals, int numberOfWithrawals, BigDecimal annualInterestRate, BigDecimal monthInterestEarnings, BigDecimal monthServiceCharge) {
         this.startingBalance = startingBalance;
         this.currentBalance = currentBalance;
@@ -30,7 +32,22 @@ public class AccountData {
         this.monthInterestEarnings = monthInterestEarnings;
         this.monthServiceCharge = monthServiceCharge;
     }
-
+    
+    public AccountData(AccountData original) {
+        this.startingBalance = new BigDecimal(original.startingBalance.toString());
+        this.currentBalance = new BigDecimal(original.currentBalance.toString());
+        this.totalOfDeposits = new BigDecimal(original.totalOfDeposits.toString());
+        this.numberOfDeposits = original.numberOfDeposits;
+        this.totalOfWithdrawals = new BigDecimal(original.totalOfWithdrawals.toString());
+        this.numberOfWithrawals = original.numberOfWithrawals;
+        this.annualInterestRate = new BigDecimal(original.annualInterestRate.toString());
+        this.monthInterestEarnings = new BigDecimal(original.monthInterestEarnings.toString());
+        this.monthServiceCharge = new BigDecimal(original.monthServiceCharge.toString());
+    }
+    
+    
+    
+    // Getters and setters.
     public BigDecimal getStartingBalance() {
         return startingBalance;
     }
@@ -103,12 +120,20 @@ public class AccountData {
         this.monthServiceCharge = monthServiceCharge;
     }
 
+    // Override of toString.
     @Override
     public String toString() {
-        return "AccountData{" + "startingBalance=" + startingBalance + ", currentBalance=" + currentBalance + ", totalOfDeposits=" + totalOfDeposits + ", numberOfDeposits=" + numberOfDeposits + ", totalOfWithdrawals=" + totalOfWithdrawals + ", numberOfWithrawals=" + numberOfWithrawals + ", annualInterestRate=" + annualInterestRate + ", monthInterestEarnings=" + monthInterestEarnings + ", monthServiceCharge=" + monthServiceCharge + '}';
+        return "Starting Balance this month: $" + startingBalance + 
+                "\nCurrent Balance: $" + currentBalance + 
+                "\nTotal of deposits this month: $" + totalOfDeposits + 
+                "\nNumber of deposits this month: " + numberOfDeposits + 
+                "\nTotal of withdrawals this month: $" + totalOfWithdrawals + 
+                "\nNumber of withrawals this month: " + numberOfWithrawals + 
+                "\nAnnual Interest Rate: " + annualInterestRate + "%" +
+                "\nInterest earnings this month: $" + monthInterestEarnings + 
+                "\nTotal of service charges this month: $" + monthServiceCharge
+                + "\n";
     }
     
-    
- 
            
 }
