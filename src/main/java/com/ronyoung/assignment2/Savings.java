@@ -29,7 +29,7 @@ public class Savings {
         // Checks if the number of deposits is 0 then sets the current balance 
         // to the starting balance if so.
         if (savingsBean.getNumberOfDeposits() == 0) {
-            savingsBean.setCurrentBalance(savingsBean.getStartingBalance());
+            updateCurrentBalance();
         }
         
         // Increases the number of deposits for the month.
@@ -129,6 +129,14 @@ public class Savings {
     // then reset all the data for a new month.
     public AccountData doMonthlyReport() {
         
+        // Checks if the current balance is 0 and if the number of withdrawals 
+        // and deposits for the month are at 0.
+        if (savingsBean.getCurrentBalance().equals(convertToBigDecimal(0)) && 
+                savingsBean.getNumberOfWithrawals() == 0 && 
+                savingsBean.getNumberOfDeposits() == 0) {
+            updateCurrentBalance();
+        }
+        
         // Calls the calculateInterest method.        
         calculateInterest();
         
@@ -163,6 +171,11 @@ public class Savings {
         var newBigDecimal = new BigDecimal(number);
         
         return newBigDecimal;
+    }
+    
+    // Method to update the current balance to match the starting balance.
+    public void updateCurrentBalance() {
+        savingsBean.setCurrentBalance(savingsBean.getStartingBalance());
     }
     
         

@@ -28,16 +28,16 @@ public class UserInterface {
         BigDecimal annualInterestRateSavings = sc.nextBigDecimal();
         
         // Get user input for starting values of Savings account.
-        System.out.println("Savings account starting balance: ");
+        System.out.println("Chequing account starting balance: ");
         BigDecimal startingBalanceChequing = sc.nextBigDecimal();
         
-        System.out.println("Savings account annual interest rate: ");
+        System.out.println("Chequing account annual interest rate: ");
         BigDecimal annualInterestRateChequing = sc.nextBigDecimal();
 
-        chequing = new Chequing(startingBalanceSavings, 
-                annualInterestRateSavings,chequingBean);
-        savings = new Savings(startingBalanceChequing, 
-                annualInterestRateChequing, savingsBean);
+        chequing = new Chequing(startingBalanceChequing, 
+                annualInterestRateChequing,chequingBean);
+        savings = new Savings(startingBalanceSavings, 
+                annualInterestRateSavings, savingsBean);
     }
     
     public void perform() {

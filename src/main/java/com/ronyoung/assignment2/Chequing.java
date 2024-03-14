@@ -27,7 +27,7 @@ public class Chequing {
         // Checks if the number of deposits is 0 then sets the current balance 
         // to the starting balance if so.
         if (chequingBean.getNumberOfDeposits() == 0) {
-            chequingBean.setCurrentBalance(chequingBean.getStartingBalance());
+            updateCurrentBalance();
         }
         
         // Increases the number of deposits for the month.
@@ -114,10 +114,20 @@ public class Chequing {
     // then reset all the data for a new month.
     public AccountData doMonthlyReport() {
         
+        // Checks if the current balance is 0 and if the number of withdrawals 
+        // and deposits for the month are at 0.
+        if (chequingBean.getCurrentBalance().equals(convertToBigDecimal(0)) && 
+                chequingBean.getNumberOfWithrawals() == 0 && 
+                chequingBean.getNumberOfDeposits() == 0) {
+            updateCurrentBalance();
+        }
         // Subtract a service charge of $5 from the current balance.
         chequingBean.setCurrentBalance(chequingBean.getCurrentBalance().subtract(convertToBigDecimal(5)));
         System.out.println("A $5 service charge has been applied to create "
                 + "this report.");
+        
+        // Update the total of service charges this month.
+        chequingBean.setMonthServiceCharge(convertToBigDecimal(5));
         
         // Calls the calculateInterest method.  
         calculateInterest();
@@ -141,7 +151,6 @@ public class Chequing {
         
         
         chequingBean.setStartingBalance(chequingBean.getCurrentBalance());
-        
         chequingBean.setMonthInterestEarnings(convertToBigDecimal(0));
         chequingBean.setCurrentBalance(convertToBigDecimal(0));
         chequingBean.setMonthServiceCharge(convertToBigDecimal(0));
@@ -158,6 +167,11 @@ public class Chequing {
         var newBigDecimal = new BigDecimal(number);
         
         return newBigDecimal;
+    }
+    
+    // Method to update the current balance to match the starting balance.
+    public void updateCurrentBalance() {
+        chequingBean.setCurrentBalance(chequingBean.getStartingBalance());
     }
     
             

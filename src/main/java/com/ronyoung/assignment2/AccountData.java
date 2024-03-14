@@ -33,6 +33,7 @@ public class AccountData {
         this.monthServiceCharge = monthServiceCharge;
     }
     
+    // Copy constructor.
     public AccountData(AccountData original) {
         this.startingBalance = new BigDecimal(original.startingBalance.toString());
         this.currentBalance = new BigDecimal(original.currentBalance.toString());
